@@ -1,0 +1,1 @@
+plt.plot(X_t, Y_t)
