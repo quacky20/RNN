@@ -105,3 +105,52 @@ class Tanh():
     def backward(self, dvalues):
         deriv = 1 - self.output**2
         self.dinput = np.multiply(deriv, dvalues)
+
+class Optimizer_SGD:
+
+    def __init__(self, learning_rate = 1, decay = 0, momentum = 0):
+        self.learning_rate = learning_rate
+        self.current_learning_rate = learning_rate
+        self.decay = decay
+        self.iterations = 0
+        self.momentum = momentum
+
+    def pre_update_params(self):
+        if self.decay:
+            self.current_learning_rate = self.learning_rate * (1 / (1 + self.decay*self.iterations))
+    
+    def update_params(self, layer):
+        
+        if self.momentum:
+
+            if not hasattr(layer, 'Wx_momentums'):
+                layer.Wx_momentums = np.zeros_like(layer.Wx)
+                layer.Wy_momentums = np.zeros_like(layer.Wy)
+                layer.Wh_momentums = np.zeros_like(layer.Wh)
+                layer.bias_momentums = np.zeros_like(layer.biases)
+
+            Wx_updates = self.momentum * layer.Wx_momentums - self.current_learning_rate * layer.dWx
+            layer.Wx_momentums = Wx_updates
+
+            Wy_updates = self.momentum * layer.Wy_momentums - self.current_learning_rate * layer.dWy
+            layer.Wy_momentums = Wy_updates
+
+            Wh_updates = self.momentum * layer.Wh_momentums - self.current_learning_rate * layer.dWh
+            layer.Wh_momentums = Wh_updates
+
+            bias_updates = self.momentum * layer.bias_momentums - self.current_learning_rate * layer.dbiases
+            layer.bias_momentums = bias_updates
+
+        else:
+            Wx_updates = -self.current_learning_rate * layer.dWx
+            Wy_updates = -self.current_learning_rate * layer.dWy
+            Wh_updates = -self.current_learning_rate * layer.dWh
+            bias_updates = -self.current_learning_rate * layer.dbiases
+
+        layer.Wx += Wx_updates
+        layer.Wy += Wy_updates
+        layer.Wh += Wh_updates
+        layer.biases += bias_updates
+
+    def post_update_params(self):
+        self.iterations += 1
