@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-def runRNN(X_t, Y_t, Activation, n_epochs = 500, n_neurons = 500, learning_rate = 1e-5, decay = 0.01, momentum = 0.95, log = False, dt = 0, plot_each = 50):
+def runRNN(X_t, Y_t, Activation, n_epochs = 500, n_neurons = 500, learning_rate = 1e-5, decay = 0.01, momentum = 0.95, dt = 0, plot_each = 50):
 
     rnn = RNN(n_neurons, Activation)
     optimizer= Optimizer_SGD(learning_rate=learning_rate, momentum=momentum, decay=decay)
