@@ -11,17 +11,17 @@ Y_t =  np.sin(X_t) + 0.1*np.random.randn(len(X_t), 1)
 
 n_neurons = 500
 
-rnn = RNN(X_t, n_neurons, Tanh())
+rnn = RNN(n_neurons, Tanh())
 optimizer= Optimizer_SGD(learning_rate = 1e-5, momentum = 0.95, decay = 0.01)
 
-T = rnn.T
+T = max(X_t.shape)
 n_epochs = 400
 
 Monitor = np.zeros((n_epochs, 1))
 
 for n in range(n_epochs):
     
-    rnn.forward()
+    rnn.forward(X_t)
     
     Y_hat = rnn.Y_hat
     dY = Y_hat - Y_t
